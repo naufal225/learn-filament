@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Products\Tables;
 
+use App\Filament\Exports\ProductExporter;
 use App\Filament\Resources\Categories\Tables\CategoriesTable;
 use App\Models\Category;
 use App\Models\Product;
@@ -11,6 +12,8 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ExportAction;
+use Filament\Actions\ExportBulkAction;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -65,6 +68,16 @@ class ProductsTable
                 EditAction::make(),
             ])
             ->toolbarActions([
+                // ExportAction::make('product_export')
+                //     ->label('Export Produk')
+                //     ->icon(Heroicon::OutlinedArrowDownTray)
+                //     ->exporter(ProductExporter::class),
+
+                ExportBulkAction::make('product_export')
+                    ->label('Export Produk')
+                    ->icon(Heroicon::OutlinedArrowDownTray)
+                    ->exporter(ProductExporter::class),
+
                 BulkActionGroup::make([
 
                     BulkAction::make('activate')
