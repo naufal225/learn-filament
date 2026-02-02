@@ -22,6 +22,10 @@ class Supplier extends Model
         return $this->hasMany(Product::class, 'supplier_id');
     }
 
+    public function transactions() {
+        return $this->hasMany(Transaction::class, 'supplier_id');
+    }
+
     protected static function booted()
     {
         static::creating(fn($m) => $m->created_by == auth()->user()->id);

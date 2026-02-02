@@ -28,9 +28,14 @@ class Product extends Model
         return $this->belongsTo(Supplier::class, 'supplier_id', 'id');
     }
 
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'product_id');
+    }
+
     protected static function booted()
     {
-        static::creating(fn ($m) => $m->created_by == auth()->user()->id);
-        static::updating(fn ($m) => $m->updated_by == auth()->user()->id);
+        static::creating(fn($m) => $m->created_by == auth()->user()->id);
+        static::updating(fn($m) => $m->updated_by == auth()->user()->id);
     }
 }
