@@ -20,23 +20,27 @@ class CategoriesTable
                     ->searchable()
                     ->sortable(),
 
+                TextColumn::make('creator.name')->label('Dibuat oleh'),
+
                 TextColumn::make('products_count')
                     ->label('Jumlah Produk')
                     ->counts('products')
                     ->badge()
-                    ->color(fn($state) => $state > 0 ? 'success':'gray')
+                    ->color(fn($state) => $state > 0 ? 'success' : 'gray')
                     ->sortable()
             ])
+            ->emptyStateHeading('Belum Ada Data')
+            ->emptyStateDescription('Klik "Tambah Kategori" untuk Menambah Data')
             ->filters([
                 //
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make()
+                EditAction::make()->visible(fn() => auth()->user()?->role === 'admin'),
+                DeleteAction::make()->visible(fn() => auth()->user()?->role === 'admin')
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->visible(fn() => auth()->user()?->role === 'admin'),
                 ]),
             ]);
     }

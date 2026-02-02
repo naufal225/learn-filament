@@ -15,10 +15,19 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_id')->constrained('categories', 'id')->cascadeOnDelete();
             $table->foreignId('supplier_id')->constrained('suppliers', 'id')->cascadeOnDelete();
+            $table->foreignId('created_by')->constrained('users', 'id')->cascadeOnDelete();
+            $table->foreignId('updated_by')->constrained('users', 'id')->cascadeOnDelete();
             $table->string('name');
             $table->integer('price');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
+
+
+            $table->index('is_active');
+            $table->index('category_id');
+            $table->index('supplier_id');
+            $table->index('created_by');
+            $table->index('updated_by');
         });
     }
 

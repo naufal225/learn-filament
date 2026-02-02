@@ -47,4 +47,9 @@ class ProductResource extends Resource
             'edit' => EditProduct::route('/{record}/edit'),
         ];
     }
+
+    public static function canDeleteAny(): bool
+    {
+        return auth()->user()?->role == 'admin';
+    }
 }

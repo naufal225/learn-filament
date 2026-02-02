@@ -13,11 +13,16 @@ return new class extends Migration
     {
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('created_by')->constrained('users', 'id')->cascadeOnDelete();
+            $table->foreignId('updated_by')->constrained('users', 'id')->cascadeOnDelete();
             $table->string('name');
             $table->text('address');
             $table->string('phone_number');
             $table->string('email');
             $table->timestamps();
+
+            $table->index('created_by');
+            $table->index('updated_by');
         });
     }
 

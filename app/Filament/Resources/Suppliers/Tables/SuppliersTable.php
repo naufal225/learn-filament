@@ -35,6 +35,8 @@ class SuppliersTable
                     ->searchable()
                     ->sortable(),
 
+                TextColumn::make('creator.name')->label('Dibuat oleh'),
+
                 TextColumn::make('products_count')
                     ->label('Jumlah Produk')
                     ->counts('products')
@@ -43,16 +45,18 @@ class SuppliersTable
                     ->sortable()
 
             ])
+            ->emptyStateHeading('Belum Ada Data')
+            ->emptyStateDescription('Klik "Tambah Supplier" untuk Menambah Data')
             ->filters([
                 //
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make()
+                EditAction::make()->visible(fn() => auth()->user()?->role === 'admin'),
+                DeleteAction::make()->visible(fn() => auth()->user()?->role === 'admin')
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->visible(fn() => auth()->user()?->role === 'admin'),
                 ]),
             ]);
     }

@@ -27,6 +27,7 @@ class ProductsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn($query) => $query->with(['supplier', 'category']))
             ->columns([
                 TextColumn::make('name')
                     ->label('Product')
@@ -43,6 +44,8 @@ class ProductsTable
                     ->searchable()
                     ->sortable(),
 
+                TextColumn::make('creator.name')->label('Dibuat oleh'),
+
                 TextColumn::make('supplier.name')
                     ->label('Supplier')
                     ->searchable()
@@ -54,6 +57,13 @@ class ProductsTable
                     ->color(fn($state) => $state > 0 ? 'success' : 'danger')
                     ->formatStateUsing(fn($state) => $state ? 'Aktif' : 'Non Aktif')
             ])
+            ->emptyStateHeading('Belum Ada Data')
+            ->emptyStateDescription('Klik "Tambah Produk" untuk Menambah Data')
+            ->modifyQueryUsing(function ($query) {
+                if (auth()->user()->role == 'staff') {
+                    return $query->where('is_active', '>', 0);
+                }
+            })
             ->filters([
                 SelectFilter::make('category_id')
                     ->label('Kategori')
@@ -63,9 +73,6 @@ class ProductsTable
                     ->label('Status')
                     ->trueLabel('Aktif')
                     ->falseLabel('Non Aktif')
-            ])
-            ->recordActions([
-                EditAction::make(),
             ])
             ->toolbarActions([
                 // ExportAction::make('product_export')
@@ -92,12 +99,12 @@ class ProductsTable
                         ->color('danger')
                         ->icon(Heroicon::OutlinedXCircle),
 
-                    DeleteBulkAction::make(),
-                ]),
+                    DeleteBulkAction::make()->visible(fn() => auth()->user()?->role === 'admin'),
+                ])->visible(fn() => auth()->user()?->role === 'admin'),
             ])
-            ->actions([
-                EditAction::make(),
-                DeleteAction::make()
+            ->recordActions([
+                EditAction::make()->visible(fn() => auth()->user()?->role === 'admin'),
+                DeleteAction::make()->visible(fn() => auth()->user()?->role === 'admin')
             ]);
     }
 }

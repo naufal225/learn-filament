@@ -47,4 +47,9 @@ class SupplierResource extends Resource
             'edit' => EditSupplier::route('/{record}/edit'),
         ];
     }
+
+    public static function canDeleteAny(): bool
+    {
+        return auth()->user()?->role == 'admin';
+    }
 }
